@@ -1,0 +1,17 @@
+# Use node image
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy all files
+COPY . .
+
+# Expose port 3001 for react-scripts
+EXPOSE 3001
+
+# Start the dev server
+CMD ["npm", "run", "dev"]
