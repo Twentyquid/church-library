@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "./db_utils/db.js";
 import initializeTables from "./db_utils/initialize_tables.js";
+import booksRoutes from "./routes/books.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,6 +11,11 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API is running");
 });
+
+app.use(express.json());
+
+// Use books routes
+app.use("/api/books", booksRoutes);
 
 const startServer = async () => {
   try {

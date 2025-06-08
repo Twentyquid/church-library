@@ -23,6 +23,11 @@ services:
       - /backend/node_modules # Prevent overwrite of node_modules inside container
     environment:
       - CHOKIDAR_USEPOLLING=true # Use polling for watching changes, good for Docker on some OS
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=church_library
     depends_on:
       db:
         condition: service_healthy # Wait for db to be healthy before starting backend
