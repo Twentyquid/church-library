@@ -2,13 +2,17 @@ import express from "express";
 import pool from "./db_utils/db.js";
 import initializeTables from "./db_utils/initialize_tables.js";
 import booksRoutes from "./routes/books.js";
+import cors from "cors";
+import seedBooks from "./db_utils/seedbooks.js";
 
 const app = express();
+app.use(cors());
+
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/api/test", (req, res) => {
   res.send("API is running");
 });
 
@@ -22,6 +26,7 @@ const startServer = async () => {
     await pool.connect();
     console.log("✅ Connected to the database");
     await initializeTables();
+    await seedBooks();
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });

@@ -1,3 +1,4 @@
+const pool = require("./db.js"); // Adjust the path as necessary
 const initializeTables = async () => {
   try {
     await pool.query(`
@@ -14,6 +15,7 @@ const initializeTables = async () => {
         title TEXT NOT NULL,
         author TEXT,
         description TEXT,
+        cover_url TEXT,
         content TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );

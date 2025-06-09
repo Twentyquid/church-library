@@ -12,6 +12,7 @@ services:
       - /app/node_modules # Prevent overwrite of node_modules inside container
     environment:
       - CHOKIDAR_USEPOLLING=true # Use polling for watching changes, good for Docker on some OS
+      - VITE_BACKEND_URL=http://localhost:3001 # Backend URL for React app
   backend:
     build:
       context: ./backend/
@@ -19,8 +20,8 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./backend:/backend # Mount current dir to container for live reload
-      - /backend/node_modules # Prevent overwrite of node_modules inside container
+      - ./backend:/app # Mount current dir to container for live reload
+      - /app/node_modules # Prevent overwrite of node_modules inside container
     environment:
       - CHOKIDAR_USEPOLLING=true # Use polling for watching changes, good for Docker on some OS
       - DB_USER=postgres
@@ -35,7 +36,7 @@ services:
     image: postgres:16
     restart: always
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "myuser"]
+      test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
