@@ -33,12 +33,7 @@ Church Book Library is an electronic library web application focused on providin
 
 2. **Configure environment variables:**
 
-   - Copy the example environment files and update them with your settings:
-     ```bash
-     cp backend/.env.example backend/.env
-     cp app/.env.example app/.env
-     ```
-   - Edit `backend/.env` and `app/.env` as needed.
+   If you want to run the server in development mode not need to update any thing. For production you will have to update the `compose.yaml` to use Dockerfile instead of Dockerfile.dev and add the necessary environment variables.
 
 3. **Run the application with Docker Compose:**
 
