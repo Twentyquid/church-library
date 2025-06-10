@@ -7,6 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: "0.0.0.0",
-    allowedHosts: ["'library.unparallel.in'", "localhost", "backend"],
+    allowedHosts: ["library.unparallel.in", "localhost", "backend"],
   },
 });
