@@ -25,35 +25,50 @@ exports.getAllBooks = async (req, res) => {
 // Get book by ID
 exports.getBookById = async (req, res) => {
   const { id } = req.params;
-  const page = parseInt(req.query.page) || 1;
-  const pageSize = parseInt(req.query.pageSize) || 50;
 
   try {
     const result = await pool.query("SELECT * FROM books WHERE id = $1", [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Book not found" });
     }
-    const book = result.rows[0];
-    // console.log(book);
-    const response = await fetch(book.content);
-    if (!response.ok) {
-      throw new Error("Failed to fetch book content");
-    }
-    const fullContent = await response.text();
-    // split the content into lines for pagination
-    const lines = fullContent.split("\n");
-    const startLine = (page - 1) * pageSize;
-    const endLine = startLine + pageSize;
-    const pageLines = lines.slice(startLine, endLine);
-    const pageContent = pageLines.join("\n");
-    res.json({
-      ...result.rows[0],
-      content: pageContent,
-      totalLines: lines.length,
-    });
+    res.json(result.rows[0]);
   } catch (err) {
     console.error("Error fetching book:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Fetch individual book page content
+exports.getBookPage = async (req, res) => {
+  const { id, pageNumber } = req.params;
+
+  if (!pageNumber) {
+    return res.status(400).json({ error: "Page number is required" });
+  }
+
+  try {
+    const result = await pool.query(
+      "SELECT content_base_url FROM books WHERE id = $1",
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+    const baseUrl = result.rows[0].content_base_url;
+    // Assuming pages are stored as {baseUrl}/{pageNumber}.md
+    const paddedPageNumber = String(pageNumber).padStart(5, "0");
+    const pageUrl = `${baseUrl}/${paddedPageNumber}.md`;
+    console.log(pageUrl);
+
+    const response = await fetch(pageUrl);
+    if (!response.ok) {
+      return res.status(404).json({ error: "Page not found" });
+    }
+    const pageContent = await response.text();
+    res.json({ page: parseInt(pageNumber, 10), content: pageContent });
+  } catch (err) {
+    console.error("Error fetching book page:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

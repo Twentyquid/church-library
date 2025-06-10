@@ -8,6 +8,7 @@ function BookViewer() {
   const [book, setBook] = useState(null); // Add state to store book data
   const [content, setContent] = useState(""); // Add state to store book content
   const [fontSize, setFontSize] = useState(14); // State for font size
+  const [pageContent, setPageContent] = useState(""); // State for page content
   // State for current page
   const increaseFontSize = () => {
     setFontSize((prev) => (prev < 28 ? prev + 2 : prev));
@@ -24,6 +25,21 @@ function BookViewer() {
   useEffect(() => {
     setCurrentPage(page);
   }, [page]);
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await api.get(`/books/${id}/page/${currentPage}`);
+        if (response.status !== 200) {
+          throw new Error("Network response was not ok");
+        }
+        const data = response.data;
+        setContent(data); // Store fetched content in state
+      } catch (error) {
+        console.error("Error fetching book content:", error);
+      }
+    };
+    fetchContent();
+  }, [currentPage]);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -50,9 +66,19 @@ function BookViewer() {
           <div>By {book ? book.author : "Unknown"}</div>
         </div>
         {/* divider */}
-        <div>
-          <button onClick={decreaseFontSize}>A-</button>
-          <button onClick={increaseFontSize}>A+</button>
+        <div className="my-4 flex gap-2">
+          <button
+            onClick={decreaseFontSize}
+            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-lg font-semibold transition"
+          >
+            A-
+          </button>
+          <button
+            onClick={increaseFontSize}
+            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-lg font-semibold transition"
+          >
+            A+
+          </button>
         </div>
         <div className="bg-slate-200 h-[1px] w-[calc(100%-40px)] mx-5"></div>
         <div className="mt-7">
@@ -62,19 +88,21 @@ function BookViewer() {
               className="prose max-w-none"
             >
               <ReactMarkdown>
-                {book ? book.content : "Content not available"}
+                {content ? content.content : "Content not available"}
               </ReactMarkdown>
             </div>
           </div>
         </div>
       </Suspense>
-      <div>
+      <div className="flex gap-4 justify-center mt-8">
         <button
           onClick={() => {
             if (currentPage > 1) {
               setSearchParams({ page: currentPage - 1 });
             }
           }}
+          className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition disabled:bg-gray-300 disabled:text-gray-500"
+          disabled={currentPage <= 1}
         >
           Previous
         </button>
@@ -82,6 +110,7 @@ function BookViewer() {
           onClick={() => {
             setSearchParams({ page: Number(currentPage) + 1 });
           }}
+          className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition"
         >
           Next
         </button>

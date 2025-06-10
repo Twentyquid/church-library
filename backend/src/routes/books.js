@@ -6,7 +6,15 @@ const booksController = require("../controllers/booksController");
 // GET /api/books - List all books (with optional search)
 router.get("/", booksController.getAllBooks);
 
-// GET /api/books/:id - Get a single book by ID
+// GET /api/books/:id/page/:pageNumber - Get a specific page of a book
+router.get(
+  "/:id/page/:pageNumber",
+  (req, res, next) => {
+    console.log("Matched /:id/page/:pageNumber", req.params);
+    next();
+  },
+  booksController.getBookPage
+); // GET /api/books/:id - Get a single book by ID
 router.get("/:id", booksController.getBookById);
 
 // POST /api/books - Add a new book

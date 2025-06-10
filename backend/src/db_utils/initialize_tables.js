@@ -16,7 +16,7 @@ const initializeTables = async () => {
         author TEXT,
         description TEXT,
         cover_url TEXT,
-        content TEXT,
+        content_base_url TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 

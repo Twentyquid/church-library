@@ -12,42 +12,27 @@ const seedBooks = async () => {
 
       const demoBooks = [
         {
-          title: "The Great Adventure",
-          author: "John Doe",
-          description: "A thrilling adventure story.",
-          content: "# Chapter 1\n\nIt begins...",
+          title: "Confessions",
+          author: "St. Augustine",
+          description:
+            "A classic spiritual autobiography, reflecting on his life and conversion.",
+          content_base_url:
+            "https://kjloelfkmztbcwblcngd.supabase.co/storage/v1/object/public/demobucket/Books/5/",
           cover_url:
-            "https://dommy-library.vercel.app/_next/image?url=%2Fimages%2Fthings-fall-apart.jpg&w=384&q=75",
+            "https://www.monergism.com/sites/default/files/content_images2/2015/confessoins800_0.jpg",
         },
-        {
-          title: "Mystery of the Night",
-          author: "Jane Smith",
-          description: "A mysterious tale under the stars.",
-          content: "# Chapter 1\n\nThe night was dark...",
-          cover_url:
-            "https://dommy-library.vercel.app/_next/image?url=%2Fimages%2Ffairy-tales.jpg&w=384&q=75",
-        },
-        {
-          title: "Learn React in 24 Hours",
-          author: "React Master",
-          description: "A quick and easy guide to React.",
-          content: "# Introduction\n\nReact is a library...",
-          cover_url:
-            "https://dommy-library.vercel.app/_next/image?url=%2Fimages%2Fthe-divine-comedy.jpg&w=384&q=75",
-        },
-        // Add more books here as needed...
       ];
 
       // Insert demo data
       for (const book of demoBooks) {
         await pool.query(
-          `INSERT INTO books (title, author, description, content, cover_url)
+          `INSERT INTO books (title, author, description, content_base_url, cover_url)
            VALUES ($1, $2, $3, $4, $5)`,
           [
             book.title,
             book.author,
             book.description,
-            book.content,
+            book.content_base_url,
             book.cover_url,
           ]
         );

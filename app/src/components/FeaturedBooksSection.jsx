@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
 
 function FeaturedBooksSection() {
   // Add state to store books
   const [books, setBooks] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -33,7 +35,8 @@ function FeaturedBooksSection() {
           {books.map((book) => (
             <div
               key={book.id}
-              className="border rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
+              className="border rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+              onClick={() => navigate(`/books/${book.id}`)}
             >
               <img
                 src={book.cover_url}
