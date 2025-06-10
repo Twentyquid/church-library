@@ -57,12 +57,12 @@ exports.getBookPage = async (req, res) => {
     const baseUrl = result.rows[0].content_base_url;
     // Assuming pages are stored as {baseUrl}/{pageNumber}.md
     const paddedPageNumber = String(pageNumber).padStart(5, "0");
-    const pageUrl = `${baseUrl}/${paddedPageNumber}.md`;
+    const pageUrl = `${baseUrl}${paddedPageNumber}.md`;
     console.log(pageUrl);
 
     const response = await fetch(pageUrl);
     if (!response.ok) {
-      return res.status(404).json({ error: "Page not found" });
+      return res.status(404).json({ error: "Book Page not found" });
     }
     const pageContent = await response.text();
     res.json({ page: parseInt(pageNumber, 10), content: pageContent });

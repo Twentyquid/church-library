@@ -17,7 +17,7 @@ const seedBooks = async () => {
           description:
             "A classic spiritual autobiography, reflecting on his life and conversion.",
           content_base_url:
-            "https://kjloelfkmztbcwblcngd.supabase.co/storage/v1/object/public/demobucket/Books/5/",
+            "https://kjloelfkmztbcwblcngd.supabase.co/storage/v1/object/public/demobucket/Books/4/",
           cover_url:
             "https://www.monergism.com/sites/default/files/content_images2/2015/confessoins800_0.jpg",
         },
