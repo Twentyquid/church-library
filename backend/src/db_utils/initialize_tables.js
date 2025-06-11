@@ -17,6 +17,7 @@ const initializeTables = async () => {
         description TEXT,
         cover_url TEXT,
         content_base_url TEXT,
+        total_pages INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 

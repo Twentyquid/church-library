@@ -65,6 +65,15 @@ function BookViewer() {
           <h3 className="text-3xl">{book ? book.title : "No book found"}</h3>{" "}
           <div>By {book ? book.author : "Unknown"}</div>
         </div>
+        <div>
+          <p>
+            Page {currentPage} of {book ? book.total_pages : "NA"}
+          </p>
+          <p>
+            {book ? Math.round((currentPage / book.total_pages) * 100) : "NA"}%
+            Complete
+          </p>
+        </div>
         {/* divider */}
         <div className="my-4 flex gap-2">
           <button
@@ -110,6 +119,7 @@ function BookViewer() {
           onClick={() => {
             setSearchParams({ page: Number(currentPage) + 1 });
           }}
+          disabled={currentPage >= (book ? book.total_pages : 0) - 1}
           className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition"
         >
           Next
