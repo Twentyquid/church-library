@@ -19,29 +19,34 @@ function BookViewer() {
   };
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const page = parseInt(searchParams.get("page")) || 1;
-  const [currentPage, setCurrentPage] = useState(page);
+  // Always derive page from searchParams
+  const page =
+    parseInt(searchParams.get("page")) ||
+    localStorage.getItem(`book-${id}`) ||
+    1;
+
+  // Synchronize localStorage with page param
+  // useEffect(() => {
+  //   if (id && page) {
+  //     localStorage.setItem(`book-${id}`, page);
+  //   }
+  // }, [id, page]);
+
+  // On mount, check localStorage for saved page and set search params accordingly
   useEffect(() => {
     const locallySavedPage = localStorage.getItem(`book-${id}`);
-    if (locallySavedPage) {
+    if (locallySavedPage && parseInt(locallySavedPage) !== page) {
       setSearchParams({ page: locallySavedPage });
-      setCurrentPage(parseInt(locallySavedPage));
-    } else {
-      setCurrentPage(page);
     }
-  }, [id, page, searchParams, setSearchParams]);
-  // useEffect(() => {
-  //   localStorage.setItem(`book-${id}`, parseInt(searchParams.get("page")) || 1);
-  // }, [currentPage]);
+    // Only run on mount or when id changes
+    // eslint-disable-next-line
+  }, [id]);
 
-  // Sync currentPage with search params
-  // useEffect(() => {
-  //   setCurrentPage(page);
-  // }, [page]);
+  // Fetch content when page changes
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await api.get(`/books/${id}/page/${currentPage}`);
+        const response = await api.get(`/books/${id}/page/${page}`);
         if (response.status !== 200) {
           throw new Error("Network response was not ok");
         }
@@ -52,12 +57,13 @@ function BookViewer() {
       }
     };
     fetchContent();
-  }, [currentPage]);
+  }, [id, page]);
 
+  // Fetch book details when page changes
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await api.get(`/books/${id}?page=${currentPage}`);
+        const response = await api.get(`/books/${id}?page=${page}`);
         if (response.status !== 200) {
           throw new Error("Network response was not ok");
         }
@@ -69,7 +75,7 @@ function BookViewer() {
       }
     };
     fetchBook();
-  }, [currentPage]);
+  }, [id, page]);
   return (
     <div className="text-black">
       <Suspense fallback={<div>Loading book details...</div>}>
@@ -80,10 +86,10 @@ function BookViewer() {
         </div>
         <div>
           <p>
-            Page {currentPage} of {book ? book.total_pages : "NA"}
+            Page {page} of {book ? book.total_pages : "NA"}
           </p>
           <p>
-            {book ? Math.round((currentPage / book.total_pages) * 100) : "NA"}%
+            {book ? Math.round((page / book.total_pages) * 100) : "NA"}%
             Complete
           </p>
         </div>
@@ -110,7 +116,7 @@ function BookViewer() {
               className="prose max-w-none"
             >
               <ReactMarkdown>
-                {content ? content.content : "Content not available"}
+                {content ? content.content : "Content Loading"}
               </ReactMarkdown>
             </div>
           </div>
@@ -119,24 +125,22 @@ function BookViewer() {
       <div className="flex gap-4 justify-center mt-8">
         <button
           onClick={() => {
-            if (currentPage > 1) {
-              setSearchParams({ page: currentPage - 1 });
-              localStorage.setItem(`book-${id}`, currentPage - 1);
-              setCurrentPage((prev) => prev - 1);
+            if (page > 1) {
+              localStorage.setItem(`book-${id}`, page - 1);
+              setSearchParams({ page: page - 1 });
             }
           }}
           className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition disabled:bg-gray-300 disabled:text-gray-500"
-          disabled={currentPage <= 1}
+          disabled={page <= 1}
         >
           Previous
         </button>
         <button
           onClick={() => {
-            setSearchParams({ page: Number(currentPage) + 1 });
-            setCurrentPage((prev) => prev + 1);
-            localStorage.setItem(`book-${id}`, currentPage + 1);
+            localStorage.setItem(`book-${id}`, Number(page) + 1);
+            setSearchParams({ page: Number(page) + 1 });
           }}
-          disabled={currentPage >= (book ? book.total_pages : 0) - 1}
+          disabled={page >= (book ? book.total_pages : 0) - 1}
           className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition"
         >
           Next
