@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import api from "../api";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
+import { use } from "react";
 function BookViewer() {
   const { id } = useParams();
   const [book, setBook] = useState(null); // Add state to store book data
@@ -20,11 +21,23 @@ function BookViewer() {
 
   const page = parseInt(searchParams.get("page")) || 1;
   const [currentPage, setCurrentPage] = useState(page);
+  useEffect(() => {
+    const locallySavedPage = localStorage.getItem(`book-${id}`);
+    if (locallySavedPage) {
+      setSearchParams({ page: locallySavedPage });
+      setCurrentPage(parseInt(locallySavedPage));
+    } else {
+      setCurrentPage(page);
+    }
+  }, [id, page, searchParams, setSearchParams]);
+  // useEffect(() => {
+  //   localStorage.setItem(`book-${id}`, parseInt(searchParams.get("page")) || 1);
+  // }, [currentPage]);
 
   // Sync currentPage with search params
-  useEffect(() => {
-    setCurrentPage(page);
-  }, [page]);
+  // useEffect(() => {
+  //   setCurrentPage(page);
+  // }, [page]);
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -108,6 +121,8 @@ function BookViewer() {
           onClick={() => {
             if (currentPage > 1) {
               setSearchParams({ page: currentPage - 1 });
+              localStorage.setItem(`book-${id}`, currentPage - 1);
+              setCurrentPage((prev) => prev - 1);
             }
           }}
           className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition disabled:bg-gray-300 disabled:text-gray-500"
@@ -118,6 +133,8 @@ function BookViewer() {
         <button
           onClick={() => {
             setSearchParams({ page: Number(currentPage) + 1 });
+            setCurrentPage((prev) => prev + 1);
+            localStorage.setItem(`book-${id}`, currentPage + 1);
           }}
           disabled={currentPage >= (book ? book.total_pages : 0) - 1}
           className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition"

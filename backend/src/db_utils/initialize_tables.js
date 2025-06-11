@@ -28,6 +28,24 @@ const initializeTables = async () => {
         last_page INTEGER DEFAULT 0,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+      CREATE TABLE IF NOT EXISTS tags (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(50) UNIQUE NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS book_tags (
+        book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
+        tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+        PRIMARY KEY (book_id, tag_id)
+      );
+
+      CREATE TABLE IF NOT EXISTS reading_progress (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
+        last_page INTEGER DEFAULT 0,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
 
       CREATE INDEX IF NOT EXISTS book_title_idx
       ON books

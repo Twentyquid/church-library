@@ -8,9 +8,14 @@ import BookViewer from "./components/BookViewer";
 import "remixicon/fonts/remixicon.css";
 import SearchBar from "./components/SearchBar";
 import SingInButton from "./components/SingInButton";
+import AuthModal from "./components/AuthModal";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [modal, setModal] = useState(false);
+  const handleClick = () => {
+    console.log("Sign In button clicked");
+    setModal(true);
+  };
 
   return (
     <>
@@ -20,9 +25,12 @@ function App() {
           <NavBar />
           <div className="flex items-center space-x-4">
             <SearchBar />
-            <SingInButton />
+            <SingInButton onClick={handleClick} />
           </div>
         </div>
+
+        {modal && <AuthModal setModal={setModal} />}
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />

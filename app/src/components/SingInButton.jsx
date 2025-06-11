@@ -1,11 +1,14 @@
 import React from "react";
 
-function SingInButton() {
+function SignInButton({ onClick }) {
   return (
-    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+    <button
+      onClick={onClick}
+      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+    >
       Sign In
     </button>
   );
 }
 
-export default SingInButton;
+export default SignInButton;
