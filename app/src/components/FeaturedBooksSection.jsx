@@ -15,7 +15,7 @@ function FeaturedBooksSection() {
           throw new Error("Network response was not ok");
         }
         const data = response.data;
-        setBooks(data); // Store fetched books in state
+        setBooks(data.books); // Store fetched books in state
         console.log(data);
       } catch (error) {
         console.error("Error fetching featured books:", error);
@@ -43,8 +43,20 @@ function FeaturedBooksSection() {
                 alt={book.title}
                 className="w-full h-48 object-cover mb-2 rounded"
               />
-              <h3 className="text-xl font-semibold">{book.title}</h3>
+              <h3 className="text-xl font-semibold text-black">{book.title}</h3>
               <p className="text-gray-600">{book.author}</p>
+              {book.tags.length > 0 && (
+                <div className="mt-2">
+                  {book.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full mr-1"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
               <p className="text-gray-800 mt-2">{book.description}</p>
             </div>
           ))}

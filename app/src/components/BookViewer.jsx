@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import api from "../api";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
@@ -83,6 +83,24 @@ function BookViewer() {
         <div className="flex gap-4 items-center">
           <h3 className="text-3xl">{book ? book.title : "No book found"}</h3>{" "}
           <div>By {book ? book.author : "Unknown"}</div>
+        </div>
+        <div>
+          {book
+            ? book.tags.length > 0 && (
+                <div className="mt-2">
+                  {book.tags.map((tag) => (
+                    <Link
+                      to={`/catalog?tags=${encodeURIComponent(tag)}`}
+                      key={tag}
+                    >
+                      <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full mr-1">
+                        {tag}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )
+            : "no tags found"}
         </div>
         <div>
           <p>

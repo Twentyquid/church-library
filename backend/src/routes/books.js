@@ -14,7 +14,9 @@ router.get(
     next();
   },
   booksController.getBookPage
-); // GET /api/books/:id - Get a single book by ID
+);
+router.get("/tags", booksController.getAllTags);
+// GET /api/books/:id - Get a single book by ID
 router.get("/:id", booksController.getBookById);
 
 // POST /api/books - Add a new book

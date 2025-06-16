@@ -9,6 +9,7 @@ import "remixicon/fonts/remixicon.css";
 import SearchBar from "./components/SearchBar";
 import SingInButton from "./components/SingInButton";
 import AuthModal from "./components/AuthModal";
+import Footer from "./components/Footer";
 
 function App() {
   const [modal, setModal] = useState(false);
@@ -37,6 +38,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/books/:id" element={<BookViewer />} />
         </Routes>
+        <Footer />
       </div>
     </>
   );
