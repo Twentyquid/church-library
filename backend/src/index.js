@@ -4,6 +4,7 @@ import initializeTables from "./db_utils/initialize_tables.js";
 import booksRoutes from "./routes/books.js";
 import cors from "cors";
 import seedBooks from "./db_utils/seedbooks.js";
+import seedTags from "./db_utils/seedTags.js";
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,7 @@ const startServer = async () => {
     console.log("✅ Connected to the database");
     await initializeTables();
     await seedBooks();
+    await seedTags();
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });
